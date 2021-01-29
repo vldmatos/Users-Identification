@@ -1,5 +1,6 @@
 ﻿using API.Models;
 using API.Repositories;
+using API.Sercuity;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,6 @@ namespace API.Controllers
 
 
 			var token = TokenService.GenerateToken(user);
-			user.Password = string.Empty;
 
 			return Ok( new { user, token } );
 		}
@@ -41,12 +41,13 @@ namespace API.Controllers
 
 		[HttpGet]
 		[Route("employee")]
-		[Authorize(Roles = "employee,manager")]
+		[Authorize(Roles = Roles.Employee)]
+		[Authorize(Roles = Roles.Manager)]
 		public string Employee() => $"{User.Identity.Name}, you are Employee.";
 
 		[HttpGet]
 		[Route("manager")]
-		[Authorize(Roles = "manager")]
+		[Authorize(Roles = Roles.Manager)]
 		public string Manager() => $"{User.Identity.Name}, you are Manager.";
 	}
 }
